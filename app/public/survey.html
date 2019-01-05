@@ -1,0 +1,130 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+      integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <title>Survey</title>
+  </head>
+  <body>
+    <div class="container">
+      <br />
+
+      <div class="row">
+        <div class="col-12">
+          <div class="h2">Survey Questions</div>
+          <hr />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <form id="survey">
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+      integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="text/javascript">
+      $(document).ready(() => {
+        const numQuestions = 10;
+        const questions = [];
+        const questionPrompts = [
+          "Question 1",
+          "Question 2",
+          "Question 3",
+          "Question 4",
+          "Question 5",
+          "Question 6",
+          "Question 7",
+          "Question 8",
+          "Question 9",
+          "Question 10"
+        ];
+
+        for (let i = 1; i <= numQuestions; i++) {
+          let questionLabel = $("<label>");
+          let question = $("<div>");
+          question.attr("id", `q${i}Group`);
+          questionLabel.attr("for", "name");
+          questionLabel.html(`Question ${i}`);
+          for (let j = 1; j <= 5; j++) {
+            let qChoice = $("<label>");
+            let qChoiceInp = $("<input>");
+            qChoice.attr("class", "checkbox-inline");
+            qChoiceInp.attr({
+              type: `radio`,
+              name: `q${i}`,
+              id: `q${i}-optionsRadio${j}`
+            });
+            if (j === 3) {
+              qChoiceInp.attr({
+                checked: true
+              });
+            }
+            qChoice.html(`&nbsp&nbsp&nbsp${j}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp`);
+
+            qChoice.prepend(qChoiceInp);
+            question.append(qChoice);
+          }
+          questions[i - 1] = {
+            element: question,
+            question: questionPrompts[i - 1]
+          };
+          question.prepend("<br>");
+          question.prepend(questionLabel);
+
+          questionLabel.text(questionPrompts[i - 1]);
+          $("#survey").append(question);
+        }
+        const submitButton = $("<input>");
+        submitButton.attr({
+          class: "btn btn-primary survey-submit",
+          type: "submit",
+          value: "Submit"
+        });
+        $("#survey").append(submitButton);
+        $(".survey-submit").on("click", event => {
+          event.preventDefault();
+          const answers = [];
+          for (let i = 1; i <= numQuestions; i++) {
+            for (let j = 1; j <= 5; j++) {
+              if ($(`input[id=q${i}-optionsRadio${j}]:checked`).val()) {
+                answers.push(j);
+              }
+            }
+          }
+          console.log(answers);
+        });
+
+
+      });
+    </script>
+  </body>
+</html>
