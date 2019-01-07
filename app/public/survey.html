@@ -24,27 +24,92 @@
       <div class="row">
         <div class="col-12">
           <div class="h2">Survey Questions</div>
+          <br />
+          <div class="h3">About You</div>
+          <hr />
+          <form>
+            <label class="h4">Name (required)</label>
+
+            <div class="row">
+              <div class="col">
+                <input
+                  id="firstName"
+                  type="text"
+                  class="form-control"
+                  placeholder="First name"
+                />
+              </div>
+              <div class="col">
+                <input
+                  id="lastName"
+                  type="text"
+                  class="form-control"
+                  placeholder="Last name"
+                />
+              </div>
+            </div>
+          </form>
+          <form>
+            <label class="h4">Link to photo image (required)</label>
+
+            <div class="row">
+              <div class="col">
+                <input
+                  id="pic"
+                  type="text"
+                  class="form-control"
+                  placeholder="Picture"
+                />
+              </div>
+            </div>
+          </form>
           <hr />
         </div>
       </div>
       <div class="row">
-        <div class="col-12">
-          <form id="survey">
-          </form>
+        <div class="col-12"><form id="survey"></form></div>
+      </div>
+    </div>
+    <!-- Button trigger modal -->
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Your match!</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body"></div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-      integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
     <script
       src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
       integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
@@ -56,16 +121,16 @@
         const numQuestions = 10;
         const questions = [];
         const questionPrompts = [
-          "Question 1",
-          "Question 2",
-          "Question 3",
-          "Question 4",
-          "Question 5",
-          "Question 6",
-          "Question 7",
-          "Question 8",
-          "Question 9",
-          "Question 10"
+          "You are a morning person",
+          "You prefer to work in teams",
+          "You believe in love at first sight",
+          "You would rather watch a sports game in person than at home",
+          "Popcorn at the movies is a MUST",
+          "Cooking your own in food is better than going out to eat",
+          "Big parties are more fun than small, intimate gatherings",
+          "Veggies stink but you gotta eat them",
+          "You NEED to know the lyrics to a song you like",
+          "Wasting time is not a waste of time"
         ];
 
         for (let i = 1; i <= numQuestions; i++) {
@@ -100,7 +165,7 @@
           question.prepend("<br>");
           question.prepend(questionLabel);
 
-          questionLabel.text(questionPrompts[i - 1]);
+          questionLabel.html("<h5>" + questionPrompts[i - 1] + "</h5>");
           $("#survey").append(question);
         }
         const submitButton = $("<input>");
@@ -112,18 +177,26 @@
         $("#survey").append(submitButton);
         $(".survey-submit").on("click", event => {
           event.preventDefault();
+          let name = $("#firstName").val() + " " + $("#lastName").val();
+          let photo = $("#pic").val();
           const answers = [];
           for (let i = 1; i <= numQuestions; i++) {
             for (let j = 1; j <= 5; j++) {
               if ($(`input[id=q${i}-optionsRadio${j}]:checked`).val()) {
-                answers.push(j);
+                answers.push(parseInt(j));
               }
             }
           }
-          console.log(answers);
+
+          $.post("/api/friends", {
+            scores: answers,
+            name: name,
+            photo: photo
+          }).done(data => {
+            $(".modal-body").append("Name: "+data.name);
+            $("#exampleModal").modal("show");
+          });
         });
-
-
       });
     </script>
   </body>
