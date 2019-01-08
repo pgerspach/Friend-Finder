@@ -178,21 +178,27 @@
         $(".survey-submit").on("click", event => {
           event.preventDefault();
           let name = $("#firstName").val() + " " + $("#lastName").val();
+          $("#firstName").val("");
+          $("#lastName").val("");
           let photo = $("#pic").val();
+          $("#pic").val("");
           const answers = [];
           for (let i = 1; i <= numQuestions; i++) {
             for (let j = 1; j <= 5; j++) {
               if ($(`input[id=q${i}-optionsRadio${j}]:checked`).val()) {
                 answers.push(parseInt(j));
+                $(`input[id=q${i}-optionsRadio${j}]:checked`).val("");
               }
             }
           }
-
+          
           $.post("/api/friends", {
             scores: answers,
             name: name,
             photo: photo
           }).done(data => {
+
+            $(".modal-body").text("");
             $(".modal-body").append("Name: "+data.name);
             $("#exampleModal").modal("show");
           });
