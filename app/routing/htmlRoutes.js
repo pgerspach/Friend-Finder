@@ -1,11 +1,21 @@
-const htmlRoutes = (app, path)=> {
-    app.get("/home", (req, res)=>{
+const htmlRoutes = (app, path) => {
+  app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../public/home.html"));
+  });
+  app.get("/:htmlRoute", (req, res) => {
+
+    switch(req.params.htmlRoute){
+      case("home"):
       res.sendFile(path.join(__dirname, "../public/home.html"));
-    });
-  
-    app.get("/survey", (req, res)=>{
+      break;
+      case("survey"):
       res.sendFile(path.join(__dirname, "../public/survey.html"));
-    });
-  };
-  
-  module.exports = htmlRoutes;
+      break;
+      default:
+      res.send("Cannot find the page you are looking for.")
+      break
+    }
+  });
+};
+
+module.exports = htmlRoutes;
