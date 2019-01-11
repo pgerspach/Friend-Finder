@@ -42,6 +42,9 @@ const apiRoutes = function(app, path) {
       }
     );
   });
+  app.get("/app/friends", (req,res)=>{
+    res.sendFile(path.join(__dirname, "../data/friends.json"))
+  })
 };
 
 module.exports = apiRoutes;

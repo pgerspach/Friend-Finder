@@ -187,19 +187,21 @@
             for (let j = 1; j <= 5; j++) {
               if ($(`input[id=q${i}-optionsRadio${j}]:checked`).val()) {
                 answers.push(parseInt(j));
-                $(`input[id=q${i}-optionsRadio${j}]:checked`).val("");
               }
             }
           }
-          
-          $.post("/api/friends", {
-            scores: answers,
-            name: name,
-            photo: photo
-          }).done(data => {
 
+          $.post("/api/friends", {
+            name: name,
+            photo: photo,
+            scores: answers
+          }).done(data => {
             $(".modal-body").text("");
-            $(".modal-body").append("Name: "+data.name);
+
+            $(".modal-body").html(
+              "<img width='300' height='300' src=" + data.photo + ">"
+            );
+            $(".modal-body").append("Name: " + data.name);
             $("#exampleModal").modal("show");
           });
         });
